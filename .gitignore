@@ -95,6 +95,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
+*logs/
 *.jar
 *.war
 *.nar
