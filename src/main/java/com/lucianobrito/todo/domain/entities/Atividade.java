@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "descricao", "data", "horario", "local"})
+@JsonPropertyOrder({"id", "descricao", "horario", "local"})
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -21,8 +21,11 @@ public class Atividade extends Metadata implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "atividade_gen")
     private Long id;
+
+    @Column(columnDefinition = "varchar(200) not null")
     private String descricao;
-    private LocalDate data;
+
+    @Column(unique = true)
     private LocalTime horario;
     private String local;
 

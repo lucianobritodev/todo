@@ -11,10 +11,11 @@ values
 
 
 insert into agenda
-    (id, descricao, usuario_id, status, criado_em, modificado_em)
+    (id, titulo, data, usuario_id, status, criado_em, modificado_em)
 values
     ((select nextval('seq_agenda')),
      'Segunda-feira',
+     now(),
      (select id from usuario where login = 'luciano@email.com'),
      true,
      now(),
@@ -22,14 +23,13 @@ values
 
 
 insert into atividade
-(id, descricao, data, horario, local, agenda_id, status, criado_em, modificado_em)
+(id, descricao, horario, local, agenda_id, status, criado_em, modificado_em)
 values
     ((select nextval('seq_atividade')),
      'Levar o carro para lavar',
      now(),
-     now(),
      'Lava-jato do zezinho',
-     (select id from agenda where descricao = 'Segunda-feira'),
+     (select id from agenda where titulo = 'Segunda-feira'),
      true,
      now(),
      now());

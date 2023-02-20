@@ -6,10 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "descricao", "atividades"})
+@JsonPropertyOrder({"id", "titulo", "data", "atividades"})
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -22,7 +23,10 @@ public class Agenda extends Metadata implements Serializable {
     private Long id;
 
     @Column(columnDefinition = "varchar(100) not null", unique = true)
-    private String descricao;
+    private String titulo;
+
+    @Column(unique = true)
+    private LocalDate data;
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "agenda")
