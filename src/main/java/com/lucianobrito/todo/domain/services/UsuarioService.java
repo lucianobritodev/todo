@@ -26,7 +26,10 @@ public class UsuarioService {
 
     @Transactional
     public void deleteById(Long id) {
-        usuarioRepository.deleteById(id);
+        Usuario usuarioDb = findAOneById(id);
+
+        if (usuarioDb.getId() != null)
+            usuarioRepository.deleteById(id);
     }
 
     @Transactional
