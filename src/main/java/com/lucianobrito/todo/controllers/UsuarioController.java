@@ -5,8 +5,6 @@ import com.lucianobrito.todo.domain.services.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @AllArgsConstructor

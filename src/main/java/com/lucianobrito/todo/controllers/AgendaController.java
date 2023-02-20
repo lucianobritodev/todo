@@ -1,7 +1,6 @@
 package com.lucianobrito.todo.controllers;
 
 import com.lucianobrito.todo.domain.entities.Agenda;
-import com.lucianobrito.todo.domain.entities.Usuario;
 import com.lucianobrito.todo.domain.services.AgendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

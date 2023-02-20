@@ -1,7 +1,6 @@
 package com.lucianobrito.todo.domain.services;
 
 import com.lucianobrito.todo.domain.entities.Agenda;
-import com.lucianobrito.todo.domain.entities.Usuario;
 import com.lucianobrito.todo.domain.repositories.AgendaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
