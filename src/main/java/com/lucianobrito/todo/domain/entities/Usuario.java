@@ -1,17 +1,21 @@
 package com.lucianobrito.todo.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({"id", "nome", "login", "senha", "agendamentos"})
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @SequenceGenerator(name = "usuario_gen", sequenceName = "seq_usuario", allocationSize = 1)
 public class Usuario extends Metadata implements Serializable {
@@ -28,6 +32,7 @@ public class Usuario extends Metadata implements Serializable {
     @Column(columnDefinition = "varchar(150) not null")
     private String senha;
 
+    @JsonManagedReference
     @Setter(AccessLevel.PRIVATE)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "usuario")
     private List<Agenda> agendamentos = new ArrayList<>();
