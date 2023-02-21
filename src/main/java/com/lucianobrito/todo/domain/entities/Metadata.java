@@ -10,7 +10,6 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class Metadata {
 
-    @Column(name = "status", nullable = false)
     private Boolean status;
 
     @JsonProperty("created_at")
