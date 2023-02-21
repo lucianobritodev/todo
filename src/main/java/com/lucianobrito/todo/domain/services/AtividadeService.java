@@ -2,6 +2,7 @@ package com.lucianobrito.todo.domain.services;
 
 import com.lucianobrito.todo.domain.entities.Atividade;
 import com.lucianobrito.todo.domain.repositories.AtividadeRepository;
+import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +22,14 @@ public class AtividadeService {
 
     @Transactional(readOnly = true)
     public Atividade findAOneById(Long id) {
-        return atividadeRepository.findById(id).orElse(new Atividade());
+        return atividadeRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Recurso não encontrado!"));
     }
 
     @Transactional
     public void deleteById(Long id) {
-        Atividade atividadeDb = findAOneById(id);
-        if (atividadeDb.getId() != null)
-            atividadeRepository.deleteById(id);
+        findAOneById(id);
+        atividadeRepository.deleteById(id);
     }
 
     @Transactional
@@ -38,13 +39,10 @@ public class AtividadeService {
 
     @Transactional
     public Atividade update(Long id, Atividade atividade) {
-        Atividade atividadeDb = findAOneById(id);
-        if(atividadeDb.getId() != null) {
-            atividade.setId(id);
-            return atividadeRepository.save(atividade);
-        }
-
-        return new Atividade();
+        findAOneById(id);
+        atividade.setId(id);
+        return atividadeRepository.save(atividade);
     }
+
 }
 

@@ -2,6 +2,7 @@ package com.lucianobrito.todo.domain.services;
 
 import com.lucianobrito.todo.domain.entities.Agenda;
 import com.lucianobrito.todo.domain.repositories.AgendaRepository;
+import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +22,14 @@ public class AgendaService {
 
     @Transactional(readOnly = true)
     public Agenda findAOneById(Long id) {
-        return agendaRepository.findById(id).orElse(new Agenda());
+        return agendaRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Recurso não encontrado!"));
     }
 
     @Transactional
     public void deleteById(Long id) {
-        Agenda agendaDb = findAOneById(id);
-        if (agendaDb.getId() != null)
-            agendaRepository.deleteById(id);
+        findAOneById(id);
+        agendaRepository.deleteById(id);
     }
 
     @Transactional
@@ -38,13 +39,10 @@ public class AgendaService {
 
     @Transactional
     public Agenda update(Long id, Agenda agenda) {
-        Agenda agendaDb = findAOneById(id);
-        if(agendaDb.getId() != null) {
-            agenda.setId(id);
-            return agendaRepository.save(agenda);
-        }
-
-        return new Agenda();
+        findAOneById(id);
+        agenda.setId(id);
+        return agendaRepository.save(agenda);
     }
+    
 }
 
