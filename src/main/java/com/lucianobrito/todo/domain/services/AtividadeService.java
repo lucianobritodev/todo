@@ -6,6 +6,9 @@ import com.lucianobrito.todo.domain.repositories.AtividadeRepository;
 import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +27,10 @@ public class AtividadeService extends BaseService<Atividade, AtividadeDto> {
     }
 
     @Transactional(readOnly = true)
-    public List<AtividadeDto> findAll() {
-        return atividadeRepository.findAll()
+    public Page<AtividadeDto> findAll(Pageable page) {
+        return new PageImpl<>(atividadeRepository.findAll(page)
                 .stream().map(entity -> entityToDto(entity, AtividadeDto.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)

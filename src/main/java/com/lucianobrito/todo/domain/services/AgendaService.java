@@ -6,6 +6,9 @@ import com.lucianobrito.todo.domain.repositories.AgendaRepository;
 import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +27,10 @@ public class AgendaService extends BaseService<Agenda, AgendaDto> {
     }
 
     @Transactional(readOnly = true)
-    public List<AgendaDto> findAll() {
-        return agendaRepository.findAll()
+    public Page<AgendaDto> findAll(Pageable page) {
+        return new PageImpl<>(agendaRepository.findAll(page)
                 .stream().map(entity -> entityToDto(entity, AgendaDto.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)

@@ -1,9 +1,12 @@
 package com.lucianobrito.todo.controllers;
 
+import com.lucianobrito.todo.domain.entities.Usuario;
 import com.lucianobrito.todo.domain.entities.dto.UsuarioDto;
 import com.lucianobrito.todo.domain.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +21,9 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<UsuarioDto> findAll() {
-        return usuarioService.findAll();
+    public ResponseEntity<Page<UsuarioDto>> findAll(Pageable page) {
+        Page<UsuarioDto> usuarios = usuarioService.findAll(page);
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/{id}")

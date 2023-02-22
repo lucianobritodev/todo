@@ -5,6 +5,8 @@ import com.lucianobrito.todo.domain.services.AtividadeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,8 +22,8 @@ public class AtividadeController {
     private AtividadeService atividadeService;
 
     @GetMapping
-    public ResponseEntity<List<AtividadeDto>> findAll() {
-        List<AtividadeDto> atividades = atividadeService.findAll();
+    public ResponseEntity<Page<AtividadeDto>> findAll(Pageable page) {
+        Page<AtividadeDto> atividades = atividadeService.findAll(page);
         return ResponseEntity.ok(atividades);
     }
 

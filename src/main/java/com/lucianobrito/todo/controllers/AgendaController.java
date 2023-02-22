@@ -3,11 +3,11 @@ package com.lucianobrito.todo.controllers;
 import com.lucianobrito.todo.domain.entities.dto.AgendaDto;
 import com.lucianobrito.todo.domain.services.AgendaService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -17,8 +17,8 @@ public class AgendaController {
     private AgendaService agendaService;
 
     @GetMapping
-    public ResponseEntity<List<AgendaDto>> findAll() {
-        List<AgendaDto> agendamentos = agendaService.findAll();
+    public ResponseEntity<Page<AgendaDto>> findAll(Pageable page) {
+        Page<AgendaDto> agendamentos = agendaService.findAll(page);
         return ResponseEntity.ok(agendamentos);
     }
 

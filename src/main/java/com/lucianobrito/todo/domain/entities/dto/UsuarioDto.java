@@ -19,7 +19,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "nome", "login", "agendamentos"})
 public class UsuarioDto extends Metadata implements Serializable {
 
