@@ -1,29 +1,40 @@
 package com.lucianobrito.todo.domain.services;
 
 import com.lucianobrito.todo.domain.entities.Agenda;
+import com.lucianobrito.todo.domain.entities.dto.AgendaDto;
 import com.lucianobrito.todo.domain.repositories.AgendaRepository;
 import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
-public class AgendaService {
+public class AgendaService extends BaseService<Agenda, AgendaDto> {
 
-    private AgendaRepository agendaRepository;
+    private final AgendaRepository agendaRepository;
 
-    @Transactional(readOnly = true)
-    public List<Agenda> findAll() {
-        return agendaRepository.findAll();
+    @Autowired
+    public AgendaService(ModelMapper mapper, AgendaRepository agendaRepository) {
+        super(mapper);
+        this.agendaRepository = agendaRepository;
     }
 
     @Transactional(readOnly = true)
-    public Agenda findAOneById(Long id) {
-        return agendaRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Recurso não encontrado!"));
+    public List<AgendaDto> findAll() {
+        return agendaRepository.findAll()
+                .stream().map(entity -> entityToDto(entity, AgendaDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public AgendaDto findAOneById(Long id) {
+        return agendaRepository.findById(id)
+                .map(entity -> entityToDto(entity, AgendaDto.class))
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado!"));
     }
 
     @Transactional
@@ -33,15 +44,19 @@ public class AgendaService {
     }
 
     @Transactional
-    public Agenda create(Agenda agenda) {
-        return agendaRepository.save(agenda);
+    public AgendaDto create(AgendaDto agendaDto) {
+        Agenda agenda = dtoToEntity(agendaDto, Agenda.class);
+        agendaRepository.saveAndFlush(agenda);
+        return entityToDto(agenda, AgendaDto.class);
     }
 
     @Transactional
-    public Agenda update(Long id, Agenda agenda) {
+    public AgendaDto update(Long id, AgendaDto agendaDto) {
         findAOneById(id);
+        Agenda agenda = dtoToEntity(agendaDto, Agenda.class);
         agenda.setId(id);
-        return agendaRepository.save(agenda);
+        agendaRepository.saveAndFlush(agenda);
+        return entityToDto(agenda, AgendaDto.class);
     }
     
 }

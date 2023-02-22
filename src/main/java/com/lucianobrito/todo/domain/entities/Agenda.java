@@ -9,15 +9,12 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "titulo", "data", "atividades"})
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
 @SequenceGenerator(name = "agenda_gen", sequenceName = "seq_agenda", allocationSize = 1)
 public class Agenda extends Metadata implements Serializable {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agenda_gen")
     private Long id;
@@ -28,11 +25,9 @@ public class Agenda extends Metadata implements Serializable {
     @Column(unique = true)
     private LocalDate data;
 
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "agenda")
     private List<Atividade> atividades;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

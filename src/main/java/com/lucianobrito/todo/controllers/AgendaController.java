@@ -1,6 +1,6 @@
 package com.lucianobrito.todo.controllers;
 
-import com.lucianobrito.todo.domain.entities.Agenda;
+import com.lucianobrito.todo.domain.entities.dto.AgendaDto;
 import com.lucianobrito.todo.domain.services.AgendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +17,14 @@ public class AgendaController {
     private AgendaService agendaService;
 
     @GetMapping
-    public ResponseEntity<List<Agenda>> findAll() {
-        List<Agenda> agendamentos = agendaService.findAll();
+    public ResponseEntity<List<AgendaDto>> findAll() {
+        List<AgendaDto> agendamentos = agendaService.findAll();
         return ResponseEntity.ok(agendamentos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Agenda> findOneById(@PathVariable("id") Long id) {
-        Agenda agendamento = agendaService.findAOneById(id);
+    public ResponseEntity<AgendaDto> findOneById(@PathVariable("id") Long id) {
+        AgendaDto agendamento = agendaService.findAOneById(id);
         return ResponseEntity.ok(agendamento);
     }
 
@@ -36,14 +36,14 @@ public class AgendaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Agenda create(@RequestBody Agenda agenda) {
-        return agendaService.create(agenda);
+    public AgendaDto create(@RequestBody AgendaDto agendaDto) {
+        return agendaService.create(agendaDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Agenda> update(@PathVariable Long id, @RequestBody Agenda agenda) {
-        agenda = agendaService.update(id, agenda);
-        return ResponseEntity.ok(agenda);
+    public ResponseEntity<AgendaDto> update(@PathVariable Long id, @RequestBody AgendaDto agendaDto) {
+        agendaDto = agendaService.update(id, agendaDto);
+        return ResponseEntity.ok(agendaDto);
     }
 
 }

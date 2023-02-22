@@ -1,7 +1,8 @@
 package com.lucianobrito.todo.controllers;
 
-import com.lucianobrito.todo.domain.entities.Usuario;
+import com.lucianobrito.todo.domain.entities.dto.UsuarioDto;
 import com.lucianobrito.todo.domain.services.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,14 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> findAll() {
+    public List<UsuarioDto> findAll() {
         return usuarioService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> findOneById(@PathVariable("id") Long id) {
-        Usuario usuario = usuarioService.findAOneById(id);
-        return ResponseEntity.ok(usuario);
+    public ResponseEntity<UsuarioDto> findOneById(@PathVariable("id") Long id) {
+        UsuarioDto usuarioDto = usuarioService.findAOneById(id);
+        return ResponseEntity.ok(usuarioDto);
     }
 
     @DeleteMapping("/{id}")
@@ -35,14 +36,14 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario create(@RequestBody Usuario usuario) {
-        return usuarioService.create(usuario);
+    public UsuarioDto create(@Valid @RequestBody UsuarioDto usuarioDto) {
+        return usuarioService.create(usuarioDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario usuario) {
-        usuario = usuarioService.update(id, usuario);
-        return ResponseEntity.ok(usuario);
+    public ResponseEntity<UsuarioDto> update(@PathVariable Long id, @Valid @RequestBody UsuarioDto usuarioDto) {
+        usuarioDto = usuarioService.update(id, usuarioDto);
+        return ResponseEntity.ok(usuarioDto);
     }
 
 }

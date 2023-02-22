@@ -1,29 +1,40 @@
 package com.lucianobrito.todo.domain.services;
 
 import com.lucianobrito.todo.domain.entities.Atividade;
+import com.lucianobrito.todo.domain.entities.dto.AtividadeDto;
 import com.lucianobrito.todo.domain.repositories.AtividadeRepository;
 import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
-public class AtividadeService {
+public class AtividadeService extends BaseService<Atividade, AtividadeDto> {
 
-    private AtividadeRepository atividadeRepository;
+    private final AtividadeRepository atividadeRepository;
 
-    @Transactional(readOnly = true)
-    public List<Atividade> findAll() {
-        return atividadeRepository.findAll();
+    @Autowired
+    public AtividadeService(ModelMapper mapper, AtividadeRepository atividadeRepository) {
+        super(mapper);
+        this.atividadeRepository = atividadeRepository;
     }
 
     @Transactional(readOnly = true)
-    public Atividade findAOneById(Long id) {
-        return atividadeRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Recurso não encontrado!"));
+    public List<AtividadeDto> findAll() {
+        return atividadeRepository.findAll()
+                .stream().map(entity -> entityToDto(entity, AtividadeDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public AtividadeDto findAOneById(Long id) {
+        return atividadeRepository.findById(id)
+                .map(entity -> entityToDto(entity, AtividadeDto.class))
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado!"));
     }
 
     @Transactional
@@ -33,15 +44,19 @@ public class AtividadeService {
     }
 
     @Transactional
-    public Atividade create(Atividade atividade) {
-        return atividadeRepository.save(atividade);
+    public AtividadeDto create(AtividadeDto atividadeDto) {
+        Atividade atividade = dtoToEntity(atividadeDto, Atividade.class);
+        atividadeRepository.saveAndFlush(atividade);
+        return entityToDto(atividade, AtividadeDto.class);
     }
 
     @Transactional
-    public Atividade update(Long id, Atividade atividade) {
+    public AtividadeDto update(Long id, AtividadeDto atividadeDto) {
         findAOneById(id);
+        Atividade atividade = dtoToEntity(atividadeDto, Atividade.class);
         atividade.setId(id);
-        return atividadeRepository.save(atividade);
+        atividadeRepository.saveAndFlush(atividade);
+        return entityToDto(atividade, AtividadeDto.class);
     }
 
 }

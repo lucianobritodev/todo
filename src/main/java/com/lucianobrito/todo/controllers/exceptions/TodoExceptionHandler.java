@@ -3,6 +3,7 @@ package com.lucianobrito.todo.controllers.exceptions;
 import com.lucianobrito.todo.domain.services.exceptions.BusinessRuleException;
 import com.lucianobrito.todo.domain.services.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -12,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.ZonedDateTime;
@@ -29,7 +32,8 @@ public class TodoExceptionHandler extends ResponseEntityExceptionHandler {
     private MessageSource messageSource;
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         List<ResponseError.Field> fields = new ArrayList<>();
 
@@ -40,15 +44,23 @@ public class TodoExceptionHandler extends ResponseEntityExceptionHandler {
             fields.add(new ResponseError.Field(name, message));
         }
 
-        var errorMessage = "One or more fields are invalid. Fill in correctly and try again.";
+        var errorMessage = "Um ou mais campos estão inválidos! Preencha-os corretamente e tente novamente.";
         var error = getCustomError(errorMessage, status.value(), request);
         error.setFields(fields);
 
         return handleExceptionInternal(ex, error, headers, status, request);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        var errorMessage = ((MethodArgumentTypeMismatchException) ex).getName() + " deve ser do tipo " + ((MethodArgumentTypeMismatchException) ex).getRequiredType().getSimpleName();
+        var error = getCustomError(errorMessage, status.value(), request);
+        return handleExceptionInternal(ex, error, headers, status, request);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handleResourceNotFound(
+            ResourceNotFoundException ex, WebRequest request) {
         var status = HttpStatus.NOT_FOUND;
         var error = getCustomError(ex.getMessage(), status.value(), request);
         return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);

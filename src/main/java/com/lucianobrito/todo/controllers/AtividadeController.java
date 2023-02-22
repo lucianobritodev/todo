@@ -1,10 +1,13 @@
 package com.lucianobrito.todo.controllers;
 
-import com.lucianobrito.todo.domain.entities.Atividade;
+import com.lucianobrito.todo.domain.entities.dto.AtividadeDto;
 import com.lucianobrito.todo.domain.services.AtividadeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +20,14 @@ public class AtividadeController {
     private AtividadeService atividadeService;
 
     @GetMapping
-    public ResponseEntity<List<Atividade>> findAll() {
-        List<Atividade> atividades = atividadeService.findAll();
+    public ResponseEntity<List<AtividadeDto>> findAll() {
+        List<AtividadeDto> atividades = atividadeService.findAll();
         return ResponseEntity.ok(atividades);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Atividade> findOneById(@PathVariable("id") Long id) {
-        Atividade atividade = atividadeService.findAOneById(id);
+    public ResponseEntity<AtividadeDto> findOneById(@PathVariable("id") @Min(1) Long id) {
+        AtividadeDto atividade = atividadeService.findAOneById(id);
         return ResponseEntity.ok(atividade);
     }
 
@@ -36,12 +39,12 @@ public class AtividadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Atividade create(@RequestBody Atividade atividade) {
+    public AtividadeDto create(@Valid @RequestBody AtividadeDto atividade) {
         return atividadeService.create(atividade);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Atividade> update(@PathVariable Long id, @RequestBody Atividade atividade) {
+    public ResponseEntity<AtividadeDto> update(@PathVariable Long id, @Valid @RequestBody AtividadeDto atividade) {
         atividade = atividadeService.update(id, atividade);
         return ResponseEntity.ok(atividade);
     }
