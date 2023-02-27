@@ -1,6 +1,5 @@
 package com.lucianobrito.todo.controllers;
 
-import com.lucianobrito.todo.domain.entities.Usuario;
 import com.lucianobrito.todo.domain.entities.dto.UsuarioDto;
 import com.lucianobrito.todo.domain.services.UsuarioService;
 import jakarta.validation.Valid;
@@ -10,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
